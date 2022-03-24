@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'user.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -48,25 +49,31 @@ class FriendPage extends StatelessWidget {
         Card(
           child: ListTile(
             leading: FlutterLogo(),
-            title: Text('One-line with leading widget'),
+            title: Text("XX현"),
           )
          ),
         Card(
             child: ListTile(
               leading: FlutterLogo(),
-              title: Text('One-line with leading widget'),
+              title: Text('XX준'),
             )
         ),
         Card(
             child: ListTile(
               leading: FlutterLogo(),
-              title: Text('One-line with leading widget'),
+              title: Text('XX곤'),
             )
         ),
         Card(
             child: ListTile(
               leading: FlutterLogo(),
-              title: Text('One-line with leading widget'),
+              title: Text('XX일'),
+            )
+        ),
+        Card(
+            child: ListTile(
+              leading: FlutterLogo(),
+              title: Text('XX석'),
             )
         ),
       ]
