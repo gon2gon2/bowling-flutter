@@ -3,8 +3,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
 
+const myServerUri = "http://10.0.2.2:3000/scores";
+const awsServerUri = "http://35.175.146.220:9711/scores";
+
 Future<List<User>> fetchPost() async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:5000/"));
+  // final response = await http.get(Uri.parse(myServerUri));
+  final response = await http.get(Uri.parse(awsServerUri));
 
   if (response.statusCode == 200) {
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
@@ -16,8 +20,23 @@ Future<List<User>> fetchPost() async {
   }
 }
 
+Future<http.Response> createScore() {
+  return http.post(
+    Uri.parse(awsServerUri),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic>{
+      "user_id":6,
+      "when":"2022-03-25T06:49:07.342Z",
+      "place_id":1,
+      "value":1000
+    }),
+  );
+}
+
 // void main() {
-//   fetchPost();
+//   createScore();
 // }
 
 void main() {
@@ -44,7 +63,7 @@ class MyApp extends StatelessWidget {
                 Tab(text: "설정"),
               ],
             ),
-            title: const Text("어쩔티비"),
+            title: const Text("볼링앱"),
           ),
           body: const TabBarView(
             children: [
@@ -196,74 +215,48 @@ class _FriendPageState extends State<FriendPage> {
           if (snapshot.hasData) {
             // children = const [Text("dfdfdf")];
             children = ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, int index) {
-              return Card(
-                child: ListTile(
-                title: Text(snapshot.data[index].userName),
-                leading: const Icon(Icons.account_circle_sharp),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                            title: Text('${snapshot.data[index].userName}의 상세정보'),
-                            content: SizedBox(
-                              child: Column(children: [
-                                Text(('평균 점수: ${snapshot.data[index].average}')),
-                                Text(('핸디캡: ${snapshot.data[index].handicap}'))
-                              ]),
-                              height: 100,
-                            ));
-                      });
-                },
-                // onTap: fetchPost,
-              ));
-            },
-          );
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, int index) {
+                return Card(
+                    child: ListTile(
+                  title: Text(snapshot.data[index].userName),
+                  leading: const Icon(Icons.account_circle_sharp),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: Text(
+                                  '${snapshot.data[index].userName}의 상세정보'),
+                              content: SizedBox(
+                                child: Column(children: [
+                                  Text(
+                                      ('평균 점수: ${snapshot.data[index].average}')),
+                                  Text(
+                                      ('핸디캡: ${snapshot.data[index].handicap}'))
+                                ]),
+                                height: 100,
+                              ));
+                        });
+                  },
+                ));
+              },
+            );
           } else if (snapshot.hasError) {
             children = Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              );
+              padding: const EdgeInsets.only(top: 16),
+              child: Text('Error: ${snapshot.error}'),
+            );
           } else {
             children = const Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting result...'),
-              );
+              padding: EdgeInsets.only(top: 16),
+              child: Text('Awaiting result...'),
+            );
           }
           return Center(
             child: children,
           );
         });
-    // return _allUsers.isNotEmpty
-    //     ? ListView.builder(
-    //         itemCount: _allUsers.length,
-    //         itemBuilder: (context, int index) {
-    //           return Card(
-    //               child: ListTile(
-    //             title: Text(_allUsers[index].userName),
-    //             leading: const Icon(Icons.account_circle_sharp),
-    //             // onTap: () {
-    //             //   showDialog(
-    //             //       context: context,
-    //             //       builder: (BuildContext context) {
-    //             //         return AlertDialog(
-    //             //             title: Text('${_allUsers[index].userName}의 상세정보'),
-    //             //             content: SizedBox(
-    //             //               child: Column(children: [
-    //             //                 Text(('평균 점수: ${_allUsers[index].average}')),
-    //             //                 Text(('핸디캡: ${_allUsers[index].handicap}'))
-    //             //               ]),
-    //             //               height: 100,
-    //             //             ));
-    //             //       });
-    //             // },
-    //             onTap: fetchPost,
-    //           ));
-    //         },
-    //       )
-    //     : const Text("No items");
   }
 }
 
@@ -295,7 +288,73 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("설정페이지에용"),
+      child: MyCustomFormState(),
+    );
+  }
+}
+
+class MyCustomFormState extends StatefulWidget {
+  const MyCustomFormState({ Key? key }) : super(key: key);
+
+  @override
+  State<MyCustomFormState> createState() => _MyCustomFormStateState();
+}
+
+class _MyCustomFormStateState extends State<MyCustomFormState> {
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            child: TextFormField(
+            // The validator receives the text that the user has entered.
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'user_id입력',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                } 
+                return null;
+              },
+            )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            child: TextFormField(
+            // The validator receives the text that the user has entered.
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '점수 입력',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            )),
+          ElevatedButton(
+            onPressed: () {
+              // Validate returns true if the form is valid, or false otherwise.
+              if (_formKey.currentState!.validate()) {
+                // If the form is valid, display a snackbar. In the real world,
+                // you'd often call a server or save the information in a database.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+              }
+            },
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
     );
   }
 }
