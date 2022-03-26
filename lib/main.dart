@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
+import 'secrets/secrets.dart';
 
-const myServerUri = "http://10.0.2.2:3000/scores";
-const awsServerUri = "http://54.197.125.47:9711/scores";
+const localHostUri = "http://10.0.2.2:3000/scores";
 
 Future<List<User>> fetchPost() async {
   // final response = await http.get(Uri.parse(myServerUri));
