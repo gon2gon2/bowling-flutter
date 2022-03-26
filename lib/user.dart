@@ -18,7 +18,6 @@ class User {
     return User(
       userName: json['userName'],
       userScoreList: scoreList,
-      
     );
   }
 
@@ -26,3 +25,19 @@ class User {
   num get average => (userScoreList.average.round());
   num get handicap => ((standard - userScoreList.average) * ratio).round();
 }
+
+const Map<String, int> nameToId = {
+  'XX현': 1,
+  'XX준': 2,
+  'XX곤': 3,
+  'XX일': 4,
+  'XX석': 5,
+};
+
+const List<String> possibleNames = [
+  'XX현',
+  'XX준',
+  'XX곤',
+  'XX일',
+  'XX석',
+];

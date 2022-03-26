@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user.dart';
 
 const myServerUri = "http://10.0.2.2:3000/scores";
-const awsServerUri = "http://35.175.146.220:9711/scores";
+const awsServerUri = "http://54.197.125.47:9711/scores";
 
 Future<List<User>> fetchPost() async {
   // final response = await http.get(Uri.parse(myServerUri));
@@ -20,17 +21,17 @@ Future<List<User>> fetchPost() async {
   }
 }
 
-Future<http.Response> createScore() {
+Future<http.Response> createScore(int? userId, int userScore) {
   return http.post(
     Uri.parse(awsServerUri),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, dynamic>{
-      "user_id":6,
-      "when":"2022-03-25T06:49:07.342Z",
-      "place_id":1,
-      "value":1000
+      "user_id": userId,
+      "when": "2022-03-25T06:49:07.342Z",
+      "place_id": 1,
+      "value": userScore
     }),
   );
 }
@@ -294,13 +295,15 @@ class SettingPage extends StatelessWidget {
 }
 
 class MyCustomFormState extends StatefulWidget {
-  const MyCustomFormState({ Key? key }) : super(key: key);
+  const MyCustomFormState({Key? key}) : super(key: key);
 
   @override
   State<MyCustomFormState> createState() => _MyCustomFormStateState();
 }
 
 class _MyCustomFormStateState extends State<MyCustomFormState> {
+  late String userName;
+  late String userScore;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -308,50 +311,71 @@ class _MyCustomFormStateState extends State<MyCustomFormState> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-            child: TextFormField(
-            // The validator receives the text that the user has entered.
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'user_id입력',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                } 
-                return null;
-              },
-            )),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-            child: TextFormField(
-            // The validator receives the text that the user has entered.
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '점수 입력',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
-            )),
-          ElevatedButton(
-            onPressed: () {
-              // Validate returns true if the form is valid, or false otherwise.
-              if (_formKey.currentState!.validate()) {
-                // If the form is valid, display a snackbar. In the real world,
-                // you'd often call a server or save the information in a database.
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            },
-            child: const Text('Submit'),
+      child: Row(
+        children: [
+          Flexible(
+            child: Container(
+              color: Colors.cyan,
+            ),
+            flex: 1,
+          ),
+          Flexible(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  // 이름
+                  textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    userName = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '이름을 똑바로 입력하세요';
+                    } else if (!possibleNames.contains(value)) {
+                      return "'XX곤'이나 'XX석' 처럼 입력하세요";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  // 점수
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    userScore = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '숫자만 제대로 입력하세요';
+                    } else if (int.parse(value) > 300) {
+                      return '구라치지 마세요';
+                    }
+                    return null;
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+                  ],
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      createScore(nameToId[userName], int.parse(userScore));
+                      if (_formKey.currentState!.validate()) {
+                        print('valid!!');
+                      }
+                    },
+                    child: Text("하하"))
+              ],
+            ),
+            flex: 5,
+          ),
+          Flexible(
+            child: Container(
+              color: Colors.cyan,
+            ),
+            flex: 1,
           ),
         ],
       ),
