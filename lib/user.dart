@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 
-const num standard = 140;
+const num standard = 150;
 const num ratio = 0.8;
 
 class User {
@@ -26,18 +26,4 @@ class User {
   num get handicap => ((standard - userScoreList.average) * ratio).round();
 }
 
-const Map<String, int> nameToId = {
-  'XX현': 1,
-  'XX준': 2,
-  'XX곤': 3,
-  'XX일': 4,
-  'XX석': 5,
-};
 
-const List<String> possibleNames = [
-  'XX현',
-  'XX준',
-  'XX곤',
-  'XX일',
-  'XX석',
-];

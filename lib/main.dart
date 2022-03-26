@@ -231,12 +231,18 @@ class _FriendPageState extends State<FriendPage> {
                                   '${snapshot.data[index].userName}의 상세정보'),
                               content: SizedBox(
                                 child: Column(children: [
+                                  const Text(
+                                    "최근 6경기를 바탕으로 한 통계입니다.\n(핸디캡 기준 점수: 150)",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const Text(''),
                                   Text(
                                       ('평균 점수: ${snapshot.data[index].average}')),
                                   Text(
-                                      ('핸디캡: ${snapshot.data[index].handicap}'))
+                                      ('핸디캡: ${snapshot.data[index].handicap}')),
                                 ]),
-                                height: 100,
+                                height: 150,
+                                // width: Size.infinite,
                               ));
                         });
                   },
@@ -261,14 +267,252 @@ class _FriendPageState extends State<FriendPage> {
   }
 }
 
-class GroupPage extends StatelessWidget {
+String? scoreValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return '숫자만 제대로 입력하세요';
+  } else if (int.parse(value) > 300) {
+    return '구라치지 마세요';
+  }
+  return null;
+}
+
+class GroupPage extends StatefulWidget {
   const GroupPage({Key? key}) : super(key: key);
 
   @override
+  State<GroupPage> createState() => _GroupPageState();
+}
+
+class _GroupPageState extends State<GroupPage> {
+  String score_1 = '0';
+  String handi_1 = '0';
+  String score_2 = '0';
+  String handi_2 = '0';
+  String score_3 = '0';
+  String handi_3 = '0';
+  String score_4 = '0';
+  String handi_4 = '0';
+  String score_5 = '0';
+  String handi_5 = '0';
+  String total_1 = '0';
+  String total_2 = '0';
+  String total_3 = '0';
+  String total_4 = '0';
+  String total_5 = '0';
+
+  final _formKey = GlobalKey<FormState>();
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("그룹페이지에용"),
-    );
+    return Form(
+        key: _formKey,
+        child: Column(children: [
+          const SizedBox(
+            width: 100,
+            height: 100,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              Flexible(child: Icon(Icons.looks_one)),
+              Flexible(child: Icon(Icons.looks_two)),
+              Flexible(child: Icon(Icons.looks_3)),
+              Flexible(child: Icon(Icons.looks_4)),
+              Flexible(child: Icon(Icons.looks_5))
+            ],
+          ),
+          Row(children: [
+            Flexible(
+                child: TextFormField(
+              // 점수1
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                score_1 = value;
+                total_1 = (int.parse(score_1) + int.parse(handi_1)).toString();
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 점수2
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                score_2 = value;
+                setState(() {
+                  total_2 =
+                      (int.parse(score_2) + int.parse(handi_2)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 점수3
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                score_3 = value;
+                setState(() {
+                  total_3 =
+                      (int.parse(score_3) + int.parse(handi_3)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 점수4
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                score_4 = value;
+                setState(() {
+                  total_4 =
+                      (int.parse(score_4) + int.parse(handi_4)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 점수5
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                score_5 = value;
+                setState(() {
+                  total_5 =
+                      (int.parse(score_5) + int.parse(handi_5)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+          ]),
+          Row(children: [
+            Flexible(
+                child: TextFormField(
+              // 핸디1
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                handi_1 = value;
+                // total_1 = (int.parse(score_1) + int.parse(handi_1)).toString();
+                setState(() {
+                  total_1 =
+                      (int.parse(score_1) + int.parse(handi_1)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 핸디2
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                handi_2 = value;
+                setState(() {
+                  total_2 =
+                      (int.parse(score_2) + int.parse(handi_2)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 핸디3
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                handi_3 = value;
+                setState(() {
+                  total_3 =
+                      (int.parse(score_3) + int.parse(handi_3)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 핸디4
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                handi_4 = value;
+                setState(() {
+                  total_4 =
+                      (int.parse(score_4) + int.parse(handi_4)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+            Flexible(
+                child: TextFormField(
+              // 핸디5
+              decoration: const InputDecoration(border: OutlineInputBorder()),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                handi_5 = value;
+                setState(() {
+                  total_5 =
+                      (int.parse(score_5) + int.parse(handi_5)).toString();
+                });
+              },
+              validator: scoreValidator,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
+              ],
+            )),
+          ]),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(total_1),
+              Text(total_2),
+              Text(total_3),
+              Text(total_4),
+              Text(total_5),
+            ],
+          )
+        ]));
   }
 }
 
@@ -313,20 +557,22 @@ class _MyCustomFormStateState extends State<MyCustomFormState> {
       key: _formKey,
       child: Row(
         children: [
-          Flexible(
-            child: Container(
-              color: Colors.cyan,
-            ),
-            flex: 1,
-          ),
+          const SideFlex(),
           Flexible(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                const Text(
+                  "점수 입력하기",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
                   // 이름
+                  decoration: const InputDecoration(
+                      icon: Icon(Icons.face), border: OutlineInputBorder()),
                   textAlign: TextAlign.center,
                   onChanged: (value) {
                     userName = value;
@@ -340,45 +586,65 @@ class _MyCustomFormStateState extends State<MyCustomFormState> {
                     return null;
                   },
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextFormField(
                   // 점수
+                  decoration: const InputDecoration(
+                      icon: Icon(Icons.sports_score_rounded),
+                      border: OutlineInputBorder()),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     userScore = value;
                   },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '숫자만 제대로 입력하세요';
-                    } else if (int.parse(value) > 300) {
-                      return '구라치지 마세요';
-                    }
-                    return null;
-                  },
+                  validator: scoreValidator,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$'))
                   ],
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      createScore(nameToId[userName], int.parse(userScore));
                       if (_formKey.currentState!.validate()) {
-                        print('valid!!');
+                        createScore(nameToId[userName], int.parse(userScore));
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('등록하기'),
+                                  content: const Text('점수가 등록되었습니다.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, '네'),
+                                      child: const Text('네'),
+                                    )
+                                  ],
+                                ));
                       }
                     },
-                    child: Text("하하"))
+                    child: const Text("등록하기"))
               ],
             ),
             flex: 5,
           ),
-          Flexible(
-            child: Container(
-              color: Colors.cyan,
-            ),
-            flex: 1,
-          ),
+          const SideFlex()
         ],
       ),
+    );
+  }
+}
+
+class SideFlex extends StatelessWidget {
+  const SideFlex({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        // color: Colors.cyan,
+      ),
+      flex: 1,
     );
   }
 }
