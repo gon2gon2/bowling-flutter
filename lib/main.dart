@@ -14,7 +14,6 @@ Future<List<User>> fetchPost() async {
   if (response.statusCode == 200) {
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     var result = jsonData.map<User>((data) => User.fromJson(data)).toList();
-    // print(result[3].average);
     return result;
   } else {
     throw Exception('Failed to load users');
@@ -51,7 +50,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: ,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.lightBlue[800],
+      ),
       home: DefaultTabController(
         length: 4,
         child: Scaffold(
@@ -64,7 +66,7 @@ class MyApp extends StatelessWidget {
                 Tab(text: "설정"),
               ],
             ),
-            title: const Text("볼링앱"),
+            title: const Text("볼링볼링"),
           ),
           body: const TabBarView(
             children: [
@@ -240,6 +242,7 @@ class _FriendPageState extends State<FriendPage> {
                                       ('평균 점수: ${snapshot.data[index].average}')),
                                   Text(
                                       ('핸디캡: ${snapshot.data[index].handicap}')),
+                                  Text('점수: ${snapshot.data[index].scoreList}')
                                 ]),
                                 height: 150,
                                 // width: Size.infinite,
@@ -305,11 +308,11 @@ class _GroupPageState extends State<GroupPage> {
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
-        child: Column(children: [
-          const SizedBox(
-            width: 100,
-            height: 100,
-          ),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          // const SizedBox(
+          //   width: 100,
+          //   height: 100,
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: const [
@@ -522,7 +525,7 @@ class SchedulePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("일정 페이지에용"),
+      child: Text("개발 예정"),
     );
   }
 }
@@ -605,6 +608,10 @@ class _MyCustomFormStateState extends State<MyCustomFormState> {
                   ],
                 ),
                 ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromRGBO(69, 74, 70, 1),
+                    )),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         createScore(nameToId[userName], int.parse(userScore));
@@ -642,8 +649,8 @@ class SideFlex extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: Container(
-        // color: Colors.cyan,
-      ),
+          // color: Colors.cyan,
+          ),
       flex: 1,
     );
   }

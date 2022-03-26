@@ -24,6 +24,5 @@ class User {
   // 핸디캡 get 함수
   num get average => (userScoreList.average.round());
   num get handicap => ((standard - userScoreList.average) * ratio).round();
+  List<num> get scoreList => userScoreList;
 }
-
-
